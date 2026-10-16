@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>위험성평가 도우미 설치</title>
+<style>
+:root { --bg:#f4f6f9; --card:#fff; --ink:#1f2632; --sub:#5b6575; --line:#e3e7ee; --accent:#e8501e; --navy:#1f2632; --gold:#f5b400; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.6 -apple-system,'Pretendard','Malgun Gothic',sans-serif; }
+header { background:var(--navy); color:#fff; padding:22px 16px 18px; }
+header h1 { margin:0; font-size:20px; color:var(--gold); }
+header p { margin:6px 0 0; font-size:13px; color:#cfd6e0; }
+main { max-width:560px; margin:0 auto; padding:16px; }
+.card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px; margin-bottom:14px; }
+.card h2 { margin:0 0 8px; font-size:16px; }
+ol { margin:0; padding-left:20px; }
+ol li { margin:6px 0; }
+.code { width:100%; font:12px/1.4 ui-monospace,monospace; padding:10px; border:1px solid var(--line); border-radius:8px; background:#f8f9fb; color:#333; resize:none; height:96px; word-break:break-all; }
+.btn { display:block; width:100%; margin-top:10px; padding:14px; border:0; border-radius:10px; background:var(--accent); color:#fff; font-weight:800; font-size:16px; cursor:pointer; }
+.ok { color:#2e7d32; font-weight:700; min-height:1.4em; margin-top:6px; font-size:14px; }
+.tip { font-size:13px; color:var(--sub); }
+.warn { background:#fff4e5; border-color:#ffd8a8; }
+b.k { background:#eef2f8; border-radius:4px; padding:0 5px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>⛑ 현장 위험성평가 도우미</h1>
+  <p>평가표를 한 번 작성하면 안전관리시스템 작업등록이 자동으로 채워지고, TBM 입간판사진에 평가표가 자동 첨부됩니다.</p>
+</header>
+<main>
+  <div class="card">
+    <h2>1. 버튼 코드 복사</h2>
+    <textarea id="code" class="code" readonly></textarea>
+    <button class="btn" id="copy">코드 복사하기</button>
+    <div class="ok" id="msg"></div>
+  </div>
+
+  <div class="card">
+    <h2>2. 크롬 즐겨찾기로 저장 (갤럭시)</h2>
+    <ol>
+      <li><b>크롬</b>으로 아무 페이지(이 페이지도 OK)에서 오른쪽 위 <b class="k">⋮</b> → <b class="k">☆</b>를 눌러 즐겨찾기에 추가</li>
+      <li>아래쪽에 뜨는 <b class="k">수정</b>을 누르기 (놓쳤으면 ⋮ → 북마크에서 방금 추가한 항목 길게 눌러 수정)</li>
+      <li>이름: <b class="k">위험성평가</b> 로 바꾸기</li>
+      <li>URL 칸 내용을 모두 지우고 <b>복사한 코드 붙여넣기</b> → 저장</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>3. 사용하기</h2>
+    <ol>
+      <li>크롬에서 <b>safe.skons.net</b> 로그인</li>
+      <li>주소창을 누르고 <b class="k">위험성평가</b> 입력 → 아래 목록에 뜨는 <b>☆ 위험성평가</b> 즐겨찾기를 누름<br><span class="tip">(주소창에 글자만 치고 엔터를 누르면 검색이 돼요. 꼭 목록의 별 표시 항목을 누르세요.)</span></li>
+      <li><b>📝 평가표 작성 → 작업등록 자동입력</b> → 평가표 작성 후 맨 아래 <b>📤 안전관리시스템에 자동입력</b></li>
+      <li>채워진 내용 확인 후 <b>[등록하기]는 직접</b> 누르기</li>
+      <li>TBM 3단계로 가면 입간판사진에 평가표가 자동 첨부됨. 안 붙었으면 즐겨찾기를 한 번 더 눌러 <b>📎 첨부</b> 선택</li>
+    </ol>
+  </div>
+
+  <div class="card warn">
+    <h2>알아두기</h2>
+    <ul class="tip" style="margin:0;padding-left:18px">
+      <li>회사 앱 안에서는 동작하지 않아요. <b>크롬 브라우저</b>로 접속해서 쓰세요.</li>
+      <li>등록하기·저장 버튼은 도우미가 누르지 않아요. 최종 확인과 등록은 본인이 합니다.</li>
+      <li>작업명·사유 칸에 이름, 연락처 등 개인정보는 적지 마세요.</li>
+    </ul>
+  </div>
+</main>
+<script>
+(function () {
+  var base = location.href.replace(/[^\/]*([?#].*)?$/, "");
+  var code = "javascript:(function(){var s=document.createElement('script');s.charset='utf-8';s.src='" +
+    base + "sko-helper.js?t='+Date.now();document.body.appendChild(s);})();";
+  var ta = document.getElementById("code");
+  ta.value = code;
+  document.getElementById("copy").onclick = function () {
+    var msg = document.getElementById("msg");
+    function done() { msg.textContent = "복사됐어요. 이제 2번대로 즐겨찾기 URL에 붙여넣으세요."; }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(done, function () { ta.select(); document.execCommand("copy"); done(); });
+    } else { ta.focus(); ta.select(); document.execCommand("copy"); done(); }
+  };
+})();
+</script>
+</body>
+</html>
